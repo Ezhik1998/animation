@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     controllerWalk =
         new AnimationController(vsync: this, duration: Duration(seconds: 7));
 
+// нелинейные кривые для tween-ов
     curvedAnimationBus =
         new CurvedAnimation(parent: controllerBus, curve: Curves.slowMiddle);
     curvedAnimationBike = new CurvedAnimation(
@@ -69,8 +70,13 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     tweenPlane = new Tween<double>(begin: 100.0, end: 350.0);
     tweenWalk = new Tween<double>(begin: 100.0, end: 350.0);
 
+// Для связи объекта Tween с объектом AnimationController - вызвать метод animate().
+// Метод вернет значение, которое является объектом Animation
     animationBus = tweenBus.animate(curvedAnimationBus);
-
+// Объект Animation генерирует событие анимации на каждый тик тикера,
+// который нужно обработать, чтобы анимация сработала - метод addListener().
+// Дополнительно, в обработчике события, нужно вызвать метод setState(),
+// чтобы состояние виджета обновилось и он перерисовался.
     animationBus
       ..addListener(() {
         setState(() {});
@@ -128,10 +134,13 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
         setState(() {});
       })
       ..addStatusListener((status) {
+        // AnimationStatusListener - информация об окончании анимации
+        // completed - анимация окончена на конечном значении tween
         if (status == AnimationStatus.completed) {
           angleForWalk = 180;
           paddingForWalk = 0;
           controllerWalk.reverse();
+          // dismissed - анимация окончена на начальном значении tween
         } else if (status == AnimationStatus.dismissed) {
           angleForWalk = 0;
           paddingForWalk = 50.0;
@@ -139,6 +148,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
         }
       });
 
+// для запуска анимации
     controllerBus.forward();
     controllerBike.forward();
     controllerPlane.forward();
