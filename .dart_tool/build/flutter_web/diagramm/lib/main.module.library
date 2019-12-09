@@ -1,0 +1,1 @@
+{"isEntrypoint":true,"deps":["flutter|lib/material.dart","flutter|lib/animation.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":["math"],"hasMain":true}
